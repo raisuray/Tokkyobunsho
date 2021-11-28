@@ -1,0 +1,3 @@
+in a tokkyo file find all the compound words and find the 類似度 with Kaede's result before. 
+
+after that do it first step for all the tokkyo file
