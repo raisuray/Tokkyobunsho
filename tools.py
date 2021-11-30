@@ -2,6 +2,8 @@ import spacy
 import re
 import neologdn
 import json
+import pprint
+
 
 from IGNORE_WORDS import ig
 
@@ -26,7 +28,8 @@ def find_noun_and_compound(doc, i):
                 compound += doc[count].text
                 count += 1
         except IndexError:
-            print("Index out of limit! Line : " + str(i) + " 気にしないで")
+            #print("Index out of limit! Line : " + str(i) + " 気にしないで")
+            pass
     
         
         norm = neologdn.normalize(doc[count].norm_).isascii 
@@ -118,12 +121,21 @@ def make_one(out):
     #out["list_of_noun_word"] = list(set(out["list_of_noun_word"]))
     return out
 
+def check_symbol(doc):
+    for i in doc:
+        pos = i.pos_
+        if (pos == "SYM"):
+            return True
+    return False
+    
+    
+
 if __name__ == '__main__':
     
     nlp = spacy.load("ja_ginza")
     
 
-    file_name = '1992008302.txt'
+    file_name = '1992172658.txt'
 
     out = {'list_of_compound_word':[]}
     
@@ -131,16 +143,19 @@ if __name__ == '__main__':
         doc = f.readlines()
 
     doc = exct_experimental_section(doc)
-
+    pprint.pprint(doc)
     for i in range(len(doc)):
         doc_samp = nlp(doc[i])
+        if(check_symbol(doc_samp)==True and len(doc[i]) <= 10):
+            continue
+
         list_of_compound_word = find_noun_and_compound(doc_samp, i)
         #out["list_all_words"].extend(list_all_words)
         out["list_of_compound_word"].extend(list_of_compound_word)
         #out["list_of_noun_word"].extend(list_of_noun_word)
     out = make_one(out)
     out_final = {file_name:out}
-    with open("out.json", 'w') as f:
+    with open("out2.json", 'w') as f:
         json.dump(out_final,f, indent=4, ensure_ascii=False)
     
 
