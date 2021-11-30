@@ -13,19 +13,22 @@ def find_noun_and_compound(doc, i):
     maxword = len(doc)
 
     list_of_compound_word = set()
+    """
     list_of_noun_word = set()
     list_all_words = set()
+    """
 
     while True:
-
-        """
+        
+        
         try:    
             if(doc[count].pos_ == "NUM" and doc[count+1].dep_ == "compound"):
                 compound += doc[count].text
                 count += 1
         except IndexError:
             print("Index out of limit! Line : " + str(i) + " 気にしないで")
-        """
+    
+        
         norm = neologdn.normalize(doc[count].norm_).isascii 
         while doc[count].dep_ == "compound" and doc[count].pos_ == "NOUN" and (norm != True):
             text = doc[count].text
@@ -34,7 +37,6 @@ def find_noun_and_compound(doc, i):
             compound += text
             count += 1
             found_compound_noun = 1
-
         
         if(found_compound_noun == 1 and doc[count].pos_ == "NOUN"):
             if(doc[count].text in ig ):
@@ -58,20 +60,26 @@ def find_noun_and_compound(doc, i):
         """
         count += 1
 
-        if(maxword == count):
+        if(count == maxword):
             break
-
+        
+        
+    """
     for word in list_of_compound_word:
         list_all_words.add(word)
 
     for word in list_of_noun_word:
         list_all_words.add(word)
+    """
 
     list_of_compound_word = list(list_of_compound_word)
+
+    """
     list_of_noun_word = list(list_of_noun_word)
     list_all_words = list(list_all_words)
+    """
 
-    return list_all_words, list_of_compound_word, list_of_noun_word
+    return list_of_compound_word
 
 def exct_experimental_section(doc):
 
@@ -105,9 +113,9 @@ def exct_experimental_section(doc):
     return exp_texts
 
 def make_one(out):
-    out["list_all_words"] = list(set( out["list_all_words"]))
+    #out["list_all_words"] = list(set( out["list_all_words"]))
     out["list_of_compound_word"] = list(set(out["list_of_compound_word"]))
-    out["list_of_noun_word"] = list(set(out["list_of_noun_word"]))
+    #out["list_of_noun_word"] = list(set(out["list_of_noun_word"]))
     return out
 
 if __name__ == '__main__':
@@ -115,8 +123,9 @@ if __name__ == '__main__':
     nlp = spacy.load("ja_ginza")
     
 
-    file_name = '1994254512.txt'
-    out = {'list_all_words':[], 'list_of_compound_word':[], 'list_of_noun_word':[]}
+    file_name = '1992008302.txt'
+
+    out = {'list_of_compound_word':[]}
     
     with open('effect_words/'+file_name ,mode='r') as f:
         doc = f.readlines()
@@ -125,10 +134,10 @@ if __name__ == '__main__':
 
     for i in range(len(doc)):
         doc_samp = nlp(doc[i])
-        list_all_words, list_of_compound_word, list_of_noun_word = find_noun_and_compound(doc_samp, i)
-        out["list_all_words"].extend(list_all_words)
+        list_of_compound_word = find_noun_and_compound(doc_samp, i)
+        #out["list_all_words"].extend(list_all_words)
         out["list_of_compound_word"].extend(list_of_compound_word)
-        out["list_of_noun_word"].extend(list_of_noun_word)
+        #out["list_of_noun_word"].extend(list_of_noun_word)
     out = make_one(out)
     out_final = {file_name:out}
     with open("out.json", 'w') as f:
