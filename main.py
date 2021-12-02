@@ -44,4 +44,3 @@ for patent in patents_list:
 #MAKE AN OUTPUT FILE#
 with open("out.json", 'w') as f:
         json.dump(dict_eff_words,f, indent=4, ensure_ascii=False)
-
