@@ -6,11 +6,11 @@ wv = KeyedVectors.load('./patent_w2v_iter5.model') #学習済みモデル(wmDist
 print("LOAD SUCCESS")
 
 #LOAD 発明効果 FILE
-hatsumei = tools.load_jsonfile("./sample.json")
+hatsumei = tools.load_jsonfile("./result_02.json")
 key_hatsu = hatsumei.keys()
 
 #LOAD 実施例文 FILE
-expermnt = tools.load_jsonfile("./out.json")
+expermnt = tools.load_jsonfile("./out-compound.json")
 key_exp = expermnt.keys()
 
 

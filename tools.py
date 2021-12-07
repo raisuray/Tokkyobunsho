@@ -115,6 +115,40 @@ def exct_experimental_section(doc):
     #pprint.pprint(exp_texts)
     return exp_texts
 
+def exct_hatsumei_section(doc):
+
+    start   = 0
+    end     = 0
+    read    = 0
+    pattern_start = re.compile("【発明の効果】|（発明の効果）")
+    pattern_end  = re.compile("【図面の簡単な.*】")
+
+    exp_texts = []
+
+    for i, experiment in enumerate(doc):
+        if(read == 0 and pattern_start.match(experiment) != None):   
+            read = 1
+            start = i
+        if(read == 1 and pattern_end.match(experiment) != None):
+            end = i
+            break
+
+    exp_texts = doc[start:end]
+
+    for i in range(len(exp_texts)):
+        exp_texts[i] = re.sub(r"【.*】|（.*） ?|〔[１２３４５６７８９０]?〕|<.*>|〈.*〉", "", exp_texts[i])
+        exp_texts[i] = re.sub("\n| ?", "",exp_texts[i])
+        exp_texts[i] = neologdn.normalize(exp_texts[i])
+
+    while "" in exp_texts:
+        exp_texts.remove("")
+
+    #pprint.pprint(exp_texts)
+    return exp_texts
+
+    
+
+
 def make_one(out):
     #out["list_all_words"] = list(set( out["list_all_words"]))
     out["list_of_compound_word"] = list(set(out["list_of_compound_word"]))
